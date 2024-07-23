@@ -92,7 +92,8 @@ local function SpawnOneZombie(player)
         -- Adding the zombie
         addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, 1.5);
         -- Adding the zombie to the spawned table list
-        playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]["zombieSpawned"] +
+        playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]
+            ["zombieSpawned"] +
             1;
         -- Adding the sound to the player to make the zombies hunt him
         getWorldSoundManager():addSound(player, player:getCurrentSquare():getX(),
@@ -128,7 +129,8 @@ function StartHorde(specificPlayer)
     sendServerCommand(specificPlayer, "ServerSmokeFlare", "smokeflare", { difficulty = difficulty });
 
     --Mensagem de log
-    print("[Smoke Flare] Smoke Flare called, spawning on: " .. specificPlayer:getUsername() .. " quantity: " .. zombieCount);
+    print("[Smoke Flare] Smoke Flare called, spawning on: " ..
+    specificPlayer:getUsername() .. " quantity: " .. zombieCount);
 
     -- Adicionamos o OnTick para spawnar os zumbis
     Events.OnTick.Add(CheckHordeRemainingForSmokeFlare);
@@ -175,6 +177,19 @@ function CheckHordeRemainingForSmokeFlare()
         -- Swipe all players to spawn the airdrop and alerts
         for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
             local players = getOnlinePlayers();
+            -- Singleplayer treatment
+            if not players then
+                -- Getting the sound file
+                local alarmSound = "airdrop" .. tostring(ZombRand(1));
+
+                -- Alocating in memory
+                local sound = getSoundManager():PlaySound(alarmSound, false, 0);
+                -- Playing the sound to the player
+                getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
+                sound:setVolume(0.1);
+                SpawnSpecificAirdrop(playerSpawns.airdropArea);
+                return;
+            end
             -- Sending the mesage to the player
             for i = 0, players:size() - 1 do
                 -- Getting the player by index
