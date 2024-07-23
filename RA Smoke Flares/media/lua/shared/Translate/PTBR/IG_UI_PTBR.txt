@@ -1,0 +1,4 @@
+IGUI_PTBR = {
+	IGUI_Airdrop_Smoke_Flare_Message = "Airdrop chegando na sua posição",
+	IGUI_Airdrop_Spawned = "Airdrop aterrizado",
+}

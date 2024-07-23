@@ -1,0 +1,15 @@
+Sandbox_EN = {
+	Sandbox_SmokeFlare = "Air Drop Smoke Flare",
+
+	Sandbox_SmokeFlare_SmokeFlareHorde = "Base Horde Quantity"
+	Sandbox_SmokeFlare_SmokeFlareHorde_tooltip = "This is the base horde for calculating the zombie quantity, this is randomly selected between +50% zombies and -50% zombies"
+
+	Sandbox_SmokeFlareHordeDistanceSpawn = "Horde Spawn Distance"
+	Sandbox_SmokeFlareHordeDistanceSpawn_tooltip = "The distance to the horde to spawn on player position"
+
+	Sandbox_SmokeFlareCommonZombies = "Horde Common Zombies"
+	Sandbox_SmokeFlareCommonZombies_tooltip = "The distance to the horde to spawn on player position"
+
+	Sandbox_SmokeFlareRareZombies = "Horde Rare Zombies"
+	Sandbox_SmokeFlareRareZombies_tooltip = "The distance to the horde to spawn on player position"
+}

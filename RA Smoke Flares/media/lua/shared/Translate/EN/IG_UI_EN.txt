@@ -1,0 +1,4 @@
+IGUI_EN = {
+	IGUI_Airdrop_Smoke_Flare_Message = "Airdrop Incoming in your position",
+	IGUI_Airdrop_Spawned = "Airdrop landed",
+}
