@@ -34,7 +34,7 @@ local zombieRareOutfitTable = stringToList(SandboxVars.SmokeFlare.SmokeFlareRare
 --  "Test": {
 --      "zombieCount": 100,
 --      "zombieSpawned" 53,
---      "player": IsoPlayer,
+--      "player": "Test",
 --      "airdropArea": {
 --          x: 100,
 --          y: 50,
@@ -117,7 +117,7 @@ function StartHorde(specificPlayer)
     playerSmokeFlares[specificPlayer:getUsername()] = {};
     playerSmokeFlares[specificPlayer:getUsername()]["zombieCount"] = zombieCount;
     playerSmokeFlares[specificPlayer:getUsername()]["zombieSpawned"] = 0;
-    playerSmokeFlares[specificPlayer:getUsername()]["player"] = specificPlayer;
+    playerSmokeFlares[specificPlayer:getUsername()]["player"] = specificPlayer:getUsername();
     playerSmokeFlares[specificPlayer:getUsername()]["airdropArea"] = {
         x = specificPlayer:getX(),
         y = specificPlayer:getY(),
@@ -181,7 +181,7 @@ function CheckHordeRemainingForSmokeFlare()
                 local player = players:get(i);
                 -- Checking if is the same as the smoke flare caller
                 if player:getUsername() == playerUsername then
-                    sendServerCommand(player, "ServerHorde", "smokeflare_finished", nil);
+                    sendServerCommand(player, "ServerSmokeFlare", "smokeflare_finished", nil);
                 end
             end
             SpawnSpecificAirdrop(playerSpawns.airdropArea);
