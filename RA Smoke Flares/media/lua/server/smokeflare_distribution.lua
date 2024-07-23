@@ -1,9 +1,4 @@
 ---@diagnostic disable: undefined-global
-require "Items/SuburbsDistributions"
-require "Items/ProceduralDistributions"
-require "Vehicles/VehicleDistributions"
-require "Items/Distributions"
-
 -- Gun Stores
 if SandboxVars.SmokeFlare.SmokeFlareEnableGunStoreSpawn then
     table.insert(ProceduralDistributions.list["GunStoreShelf"].items, "Base.SmokeFlare");

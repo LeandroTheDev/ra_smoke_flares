@@ -1,10 +1,10 @@
----@diagnostic disable: undefined-global, deprecated
+---@diagnostic disable: undefined-global
 -- By bobodev the furious has a name 😊😊
 
 -- Called when the player uses a smoke flare
 function Recipe.OnGiveXP.CallAirdrop(recipe, ingredients, result, player)
     -- Sending the client command to the server
-	sendClientCommand("ServerSmokeFlare", "startsmokeflare", nil);
+    sendClientCommand("ServerSmokeFlare", "startsmokeflare", nil);
 end
 
 GiveCallAirdrop = Recipe.OnGiveXP.CallAirdrop;
@@ -12,7 +12,7 @@ GiveCallAirdrop = Recipe.OnGiveXP.CallAirdrop;
 --#region lua utils
 local function stringToList(str)
     local list = {}
-    for item in string.gmatch(str, "([^,]+)") do
+    for item in string.gmatch(str, "([^/]+)") do
         table.insert(list, item)
     end
     return list
@@ -50,7 +50,7 @@ local function SpawnOneZombie(player)
     local zLocationX = 0;
     local zLocationY = 0;
     local canSpawn = false;
-    local sandboxDistance = SandboxVars.AirdropMain.SmokeFlareHordeDistanceSpawn;
+    local sandboxDistance = SandboxVars.SmokeFlare.SmokeFlareHordeDistanceSpawn;
     for i = 0, 100 do
         if ZombRand(2) == 0 then
             zLocationX = ZombRand(10) - 10 + sandboxDistance;
@@ -75,10 +75,10 @@ local function SpawnOneZombie(player)
                 break
             end
         else
-            print("[Air Drop] Zombie: Space not Loaded " .. player:getUsername());
+            print("[Smoke Flare] Zombie: Space not Loaded " .. player:getUsername());
         end
         if i == 100 then
-            print("[Air Drop] Zombie: Can't find a place to spawn " .. player:getUsername());
+            print("[Smoke Flare] Zombie: Can't find a place to spawn " .. player:getUsername());
         end
     end
     if canSpawn then
@@ -91,8 +91,8 @@ local function SpawnOneZombie(player)
         end
         -- Adding the zombie
         addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, 1.5);
-        -- Adding the zombie to the spawned table list 
-        playerBeacons[player:getUsername()]["zombieSpawned"] = playerBeacons[player:getUsername()]["zombieSpawned"] +
+        -- Adding the zombie to the spawned table list
+        playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]["zombieSpawned"] +
             1;
         -- Adding the sound to the player to make the zombies hunt him
         getWorldSoundManager():addSound(player, player:getCurrentSquare():getX(),
@@ -128,7 +128,7 @@ function StartHorde(specificPlayer)
     sendServerCommand(specificPlayer, "ServerSmokeFlare", "smokeflare", { difficulty = difficulty });
 
     --Mensagem de log
-    print("[Air Drop] Smoke Flare called, spawning on: " .. specificPlayer:getUsername() .. " quantity: " .. zombieCount);
+    print("[Smoke Flare] Smoke Flare called, spawning on: " .. specificPlayer:getUsername() .. " quantity: " .. zombieCount);
 
     -- Adicionamos o OnTick para spawnar os zumbis
     Events.OnTick.Add(CheckHordeRemainingForSmokeFlare);
@@ -185,7 +185,9 @@ function CheckHordeRemainingForSmokeFlare()
                 end
             end
             SpawnSpecificAirdrop(playerSpawns.airdropArea);
-            print("[Air Drop] Smoke Flare finished airdrop has been Spawned in X: " .. playerSpawns.airdropArea.x .. " Y: " .. playerSpawns.airdropArea.y .. " Z: " .. playerSpawns.airdropArea.z);
+            print("[Smoke Flare] Smoke Flare finished airdrop has been Spawned in X: " ..
+                playerSpawns.airdropArea.x ..
+                " Y: " .. playerSpawns.airdropArea.y .. " Z: " .. playerSpawns.airdropArea.z);
         end
         playerSmokeFlares = {};
         return
@@ -198,7 +200,7 @@ Events.OnClientCommand.Add(function(module, command, player, args)
         -- Checking if the player has already called any airdrop
         for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
             if player:getUsername() == playerUsername then
-                print("[Air Drop] " .. player:getUsername() .. " trying to use a smoke flare again...");
+                print("[Smoke Flare] " .. player:getUsername() .. " trying to use a smoke flare again...");
                 player:getInventory():AddItem('Base.SmokeFlare');
                 return;
             end
