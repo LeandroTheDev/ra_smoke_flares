@@ -1,5 +1,43 @@
 VERSION = 1,
 
+option SmokeFlare.SmokeFlareEnableGunStoreSpawn
+{
+    type = boolean,
+    default = true,
+
+    page = SmokeFlare,
+    translation = SmokeFlare_SmokeFlareEnableGunStoreSpawn,
+}
+
+option SmokeFlare.SmokeFlareGunStoreSpawnChance
+{
+	type = double,
+	min = 0,
+	max = 100,
+	default = 10.0,
+	page = SmokeFlare,
+	translation = SmokeFlare_SmokeFlareGunStoreSpawnChance,
+}
+
+option SmokeFlare.SmokeFlareEnableZombieSpawn
+{
+    type = boolean,
+    default = true,
+
+    page = SmokeFlare,
+    translation = SmokeFlare_SmokeFlareEnableZombieSpawn,
+}
+
+option SmokeFlare.SmokeFlareZombieSpawnChance
+{
+	type = double,
+	min = 0,
+	max = 100,
+	default = 0.1,
+	page = SmokeFlare,
+	translation = SmokeFlare_SmokeFlareZombieSpawnChance,
+}
+
 option SmokeFlare.SmokeFlareHorde
 {
 	type = integer,

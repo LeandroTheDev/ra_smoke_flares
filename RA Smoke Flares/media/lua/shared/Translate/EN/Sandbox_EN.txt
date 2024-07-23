@@ -1,6 +1,18 @@
 Sandbox_EN = {
 	Sandbox_SmokeFlare = "Air Drop Smoke Flare",
 
+	Sandbox_SmokeFlare_SmokeFlareEnableGunStoreSpawn = "Enable Gun Store Spawn"
+	Sandbox_SmokeFlare_SmokeFlareEnableGunStoreSpawn_tooltip = "Enable or disable spawning smoke flares in gun stores"
+
+	Sandbox_SmokeFlare_SmokeFlareGunStoreSpawnChance = "Gun Store Chance"
+	Sandbox_SmokeFlare_SmokeFlareGunStoreSpawnChance_tooltip = "Actual chance to spawn a smoke flare in gun stores"
+
+	Sandbox_SmokeFlare_SmokeFlareEnableZombieSpawn = "Enable Zombie Spawn"
+	Sandbox_SmokeFlare_SmokeFlareEnableZombieSpawn_tooltip = "Enable or disable spawning smoke flares in zombies"
+
+	Sandbox_SmokeFlare_SmokeFlareZombieSpawnChance = "Zombie Chance"
+	Sandbox_SmokeFlare_SmokeFlareZombieSpawnChance_tooltip = "Actual chance to spawn a smoke flare on zombies"
+
 	Sandbox_SmokeFlare_SmokeFlareHorde = "Base Horde Quantity"
 	Sandbox_SmokeFlare_SmokeFlareHorde_tooltip = "This is the base horde for calculating the zombie quantity, this is randomly selected between +50% zombies and -50% zombies"
 
