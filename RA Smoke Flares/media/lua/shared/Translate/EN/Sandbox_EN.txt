@@ -20,8 +20,8 @@ Sandbox_EN = {
 	Sandbox_SmokeFlare_SmokeFlareHordeDistanceSpawn_tooltip = "The distance to the horde to spawn on player position"
 
 	Sandbox_SmokeFlare_SmokeFlareCommonZombies = "Horde Common Zombies"
-	Sandbox_SmokeFlare_SmokeFlareCommonZombies_tooltip = "The distance to the horde to spawn on player position"
+	Sandbox_SmokeFlare_SmokeFlareCommonZombies_tooltip = "Generic zombies that will spawn in the airdrop horde"
 
 	Sandbox_SmokeFlare_SmokeFlareRareZombies = "Horde Rare Zombies"
-	Sandbox_SmokeFlare_SmokeFlareRareZombies_tooltip = "The distance to the horde to spawn on player position"
+	Sandbox_SmokeFlare_SmokeFlareRareZombies_tooltip = "Zombies in this options will have 1% chance of spawning in airdrop horde"
 }
