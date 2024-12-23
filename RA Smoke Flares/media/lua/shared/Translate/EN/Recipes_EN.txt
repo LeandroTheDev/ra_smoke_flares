@@ -1,3 +1,0 @@
-Recipes_EN = {
-	Recipe_Use_Smoke_Flare = "Use Smoke Flare"
-}

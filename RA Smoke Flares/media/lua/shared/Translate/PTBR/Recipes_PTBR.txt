@@ -1,3 +1,0 @@
-Recipes_PTBR = {
-	Recipe_Use_Smoke_Flare = "Usar Sinalizador"
-}
