@@ -1,5 +1,5 @@
 name=RA Smoke Flares
 poster=Poster.png
 id=rasmokeflares
-require=randomairdrops
+require=\randomairdrops
 description=Add smoke flares to call Airdrops
