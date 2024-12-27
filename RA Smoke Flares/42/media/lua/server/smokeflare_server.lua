@@ -7,8 +7,6 @@ function Recipe.OnGiveXP.CallAirdrop(recipe, ingredients, result, player)
     sendClientCommand("ServerSmokeFlare", "startsmokeflare", nil);
 end
 
-GiveCallAirdrop = Recipe.OnGiveXP.CallAirdrop;
-
 --#region lua utils
 local function stringToList(str)
     local list = {}

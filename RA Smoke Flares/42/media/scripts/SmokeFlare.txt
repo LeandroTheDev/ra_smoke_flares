@@ -9,16 +9,18 @@ module Base
                 WorldStaticModel = Money,
 	}
 
-	recipe Use Smoke Flare {
-                SmokeFlare,
-      
-                CanBeDoneFromFloor:true,
-                Time:100,
-                RemoveResultItem:true,
-                Result:SmokeFlare=1,
-                Sound:Hammering,
-                AnimNode:Craft,
-                Category:General,
-                OnGiveXP:GiveCallAirdrop,
-        }
+        craftRecipe UseSmokeFlare {
+		Time = 50,
+      	        timedAction = CraftWeapon2H,
+      	        Category = Carpentry,
+		Tags = InHandCraft;Carpentry,
+      	        OnCreate = Recipe.OnGiveXP.CallAirdrop,
+		inputs
+		{
+			item 1 [Base.SmokeFlare],
+		}
+		outputs
+		{
+		}
+	}
 }
