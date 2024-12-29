@@ -1,20 +1,19 @@
 module Base
 {
 	item SmokeFlare {
-                DisplayCategory = Junk,
-                Weight	=	0.1,
-                Type	=	Normal,
-                DisplayName	=	Smoke Flare,
-                Icon	=	SmokeFlare,
-                WorldStaticModel = Money,
+		DisplayCategory = Junk,
+		Weight	=	0.1,
+		Type	=	Normal,
+		DisplayName	=	Smoke Flare,
+		Icon	=	SmokeFlare,
+		WorldStaticModel = Money,
 	}
-
-        craftRecipe UseSmokeFlare {
+	craftRecipe UseSmokeFlare {
 		Time = 50,
-      	        timedAction = CraftWeapon2H,
-      	        Category = Carpentry,
-		Tags = InHandCraft;Carpentry,
-      	        OnCreate = Recipe.OnGiveXP.CallAirdrop,
+		timedAction = CraftWeapon2H,
+		Category = Survival,
+		Tags = InHandCraft,
+		OnCreate = Recipe.OnGiveXP.CallAirdrop,
 		inputs
 		{
 			item 1 [Base.SmokeFlare],
