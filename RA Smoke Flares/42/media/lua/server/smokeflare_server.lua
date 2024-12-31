@@ -90,7 +90,7 @@ local function SpawnOneZombie(player)
             outfit = zombieOutfitTable[ZombRand(#zombieOutfitTable) + 1];
         end
         -- Adding the zombie
-        print("X" .. zLocationX, "  Y" ..zLocationY )
+        print("X" .. zLocationX, "  Y" .. zLocationY)
         addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 1.5);
         -- Adding the zombie to the spawned table list
         playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]
@@ -126,8 +126,19 @@ function StartHorde(specificPlayer)
         z = specificPlayer:getZ()
     };
 
-    -- Send any alert to the playerEmite o alerta ao jogador
-    sendServerCommand(specificPlayer, "ServerSmokeFlare", "smokeflare", { difficulty = difficulty });
+    if isSingleplayer then
+        -- Getting the sound file
+        local alarmSound = "smokeflareradio" .. tostring(ZombRand(1));
+
+        -- Alocating in memory
+        local sound = getSoundManager():PlaySound(alarmSound, false, 0);
+        -- Playing the sound to the player
+        getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
+        sound:setVolume(0.4);
+    else
+        -- Send any alert to the player
+        sendServerCommand(specificPlayer, "ServerSmokeFlare", "smokeflare", { difficulty = difficulty });
+    end
 
     --Mensagem de log
     print("[Smoke Flare] Smoke Flare called, spawning on: " ..
@@ -199,15 +210,6 @@ function CheckHordeRemainingForSmokeFlare()
                 SpawnSpecificAirdrop(playerSpawns.airdropArea);
                 playerSmokeFlares = {};
                 return;
-            end
-            -- Sending the mesage to the player
-            for i = 0, players:size() - 1 do
-                -- Getting the player by index
-                local player = players:get(i);
-                -- Checking if is the same as the smoke flare caller
-                if player:getUsername() == playerUsername then
-                    sendServerCommand(player, "ServerSmokeFlare", "smokeflare_finished", nil);
-                end
             end
             SpawnSpecificAirdrop(playerSpawns.airdropArea);
             print("[Smoke Flare] Smoke Flare finished airdrop has been Spawned in X: " ..

@@ -72,20 +72,5 @@ local function OnServerCommand(module, command, arguments)
 		addLineToChat(
 			getText("IGUI_Airdrop_Smoke_Flare_Message"), "<RGB:" .. "255,0,0" .. ">");
 	end
-	-- Alert when the smoke flare finish
-	if module == "ServerSmokeFlare" and command == "smokeflare_finished" then
-		-- Getting the sound file
-		local alarmSound = "airdrop" .. tostring(ZombRand(1));
-
-		-- Alocating in memory
-		local sound = getSoundManager():PlaySound(alarmSound, false, 0);
-		-- Playing the sound to the player
-		getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
-		sound:setVolume(0.1);
-
-		-- Adding a message to it
-		addLineToChat(
-			getText("IGUI_Airdrop_Spawned"), "<RGB:" .. "255,0,0" .. ">");
-	end
 end
 Events.OnServerCommand.Add(OnServerCommand)
