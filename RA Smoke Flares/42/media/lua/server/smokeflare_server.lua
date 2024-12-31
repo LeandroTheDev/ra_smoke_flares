@@ -1,8 +1,10 @@
 ---@diagnostic disable: undefined-global
 -- By bobodev the furious has a name 😊😊
 
+local isSingleplayer = (not isClient() and not isServer());
+
 -- Called when the player uses a smoke flare
-function Recipe.OnGiveXP.CallAirdrop(recipe, ingredients, result, player)
+function Recipe.OnGiveXP.CallAirdrop(craftRecipeData, player)
     -- Sending the client command to the server
     sendClientCommand("ServerSmokeFlare", "startsmokeflare", nil);
 end
@@ -88,7 +90,8 @@ local function SpawnOneZombie(player)
             outfit = zombieOutfitTable[ZombRand(#zombieOutfitTable) + 1];
         end
         -- Adding the zombie
-        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, 1.5);
+        print("X" .. zLocationX, "  Y" ..zLocationY )
+        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 1.5);
         -- Adding the zombie to the spawned table list
         playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]
             ["zombieSpawned"] +
@@ -128,7 +131,7 @@ function StartHorde(specificPlayer)
 
     --Mensagem de log
     print("[Smoke Flare] Smoke Flare called, spawning on: " ..
-    specificPlayer:getUsername() .. " quantity: " .. zombieCount);
+        specificPlayer:getUsername() .. " quantity: " .. zombieCount);
 
     -- Adicionamos o OnTick para spawnar os zumbis
     Events.OnTick.Add(CheckHordeRemainingForSmokeFlare);
@@ -146,25 +149,33 @@ function CheckHordeRemainingForSmokeFlare()
     -- Swipe to check if all zombies has spawned for the player
     local allZombiesSpawned = true;
     for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
-        -- Getting the IsoPlayer throught username
-        local players = getOnlinePlayers();
-        local found = false;
-        for i = 0, players:size() - 1 do
-            -- Getting player by index
-            local player = players:get(i);
-            -- Checking if the username is the same
-            if player:getUsername() == playerUsername then
-                found = true;
-                -- Checking if the player finished spawning
-                if playerSpawns.zombieSpawned < playerSpawns.zombieCount then
-                    allZombiesSpawned = false;
-                    SpawnOneZombie(player);
+        if isSingleplayer then -- Singleplayer treatment
+            if playerSpawns.zombieSpawned < playerSpawns.zombieCount then
+                allZombiesSpawned = false;
+                SpawnOneZombie(getPlayer());
+            end
+        else -- Dedicated Server
+            -- Getting online players
+            local players = getOnlinePlayers();
+
+            local found = false;
+            for i = 0, players:size() - 1 do
+                -- Getting player by index
+                local player = players:get(i);
+                -- Checking if the username is the same
+                if player:getUsername() == playerUsername then
+                    found = true;
+                    -- Checking if the player finished spawning
+                    if playerSpawns.zombieSpawned < playerSpawns.zombieCount then
+                        allZombiesSpawned = false;
+                        SpawnOneZombie(player);
+                    end
                 end
             end
-        end
-        -- If not found the player, remove it because hes probably exited from the server
-        if not found then
-            playerSmokeFlares[playerUsername] = nil;
+            -- If not found the player, remove it because hes probably exited from the server
+            if not found then
+                playerSmokeFlares[playerUsername] = nil;
+            end
         end
     end
 
@@ -176,7 +187,7 @@ function CheckHordeRemainingForSmokeFlare()
         for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
             local players = getOnlinePlayers();
             -- Singleplayer treatment
-            if not players then
+            if isSingleplayer then
                 -- Getting the sound file
                 local alarmSound = "airdrop" .. tostring(ZombRand(1));
 
@@ -186,6 +197,7 @@ function CheckHordeRemainingForSmokeFlare()
                 getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
                 sound:setVolume(0.1);
                 SpawnSpecificAirdrop(playerSpawns.airdropArea);
+                playerSmokeFlares = {};
                 return;
             end
             -- Sending the mesage to the player
