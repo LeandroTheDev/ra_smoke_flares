@@ -1,5 +1,5 @@
 # Random Airdrops Smokes Flares
-Addon for [Random Airdrops](https://github.com/LeandroTheDev/random_airdrops) to add smoke flares in the game to manually call any airdrop.
+Addon for [Random Airdrops 2](https://github.com/LeandroTheDev/random_airdrops_2) to add smoke flares in the game to manually call any airdrop.
 
 ### How it works?
 - When calling any airdrop a horde will come to hunt you

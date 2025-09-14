@@ -58,15 +58,18 @@ end
 -- Called everytime the server send something to us
 local function OnServerCommand(module, command, arguments)
 	-- Alert using smoke flare
-	if module == "ServerSmokeFlare" and command == "smokeflare" then
-		-- Getting the sound file
+	if module == "ServerSmokeFlare" and command == "smokeFlare" then
+		-- Alert sound
 		local alarmSound = "smokeflareradio" .. tostring(ZombRand(1));
-
-		-- Alocating in memory
 		local sound = getSoundManager():PlaySound(alarmSound, false, 0);
-		-- Playing the sound to the player
 		getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
 		sound:setVolume(0.4);
+
+		-- You should awake the player if a horde is coming right?
+		player:forceAwake();
+
+		-- And speed to normal if the player is fast forwarding
+		setGameSpeed(1);
 
 		-- Adding a message to it
 		addLineToChat(

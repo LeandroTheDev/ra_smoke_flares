@@ -1,27 +1,33 @@
 Sandbox_EN = {
 	Sandbox_SmokeFlare = "Air Drop Smoke Flare",
 
-	Sandbox_SmokeFlare_SmokeFlareEnableGunStoreSpawn = "Enable Gun Store Spawn"
-	Sandbox_SmokeFlare_SmokeFlareEnableGunStoreSpawn_tooltip = "Enable or disable spawning smoke flares in gun stores"
+	Sandbox_SmokeFlare_EnableGunStoreSpawn = "Enable Gun Store Spawn"
+	Sandbox_SmokeFlare_EnableGunStoreSpawn_tooltip = "Enable or disable spawning smoke flares in gun stores"
 
-	Sandbox_SmokeFlare_SmokeFlareGunStoreSpawnChance = "Gun Store Chance"
-	Sandbox_SmokeFlare_SmokeFlareGunStoreSpawnChance_tooltip = "Actual chance to spawn a smoke flare in gun stores"
+	Sandbox_SmokeFlare_GunStoreSpawnChance = "Gun Store Chance"
+	Sandbox_SmokeFlare_GunStoreSpawnChance_tooltip = "Actual chance to spawn a smoke flare in gun stores"
 
-	Sandbox_SmokeFlare_SmokeFlareEnableZombieSpawn = "Enable Zombie Spawn"
-	Sandbox_SmokeFlare_SmokeFlareEnableZombieSpawn_tooltip = "Enable or disable spawning smoke flares in zombies"
+	Sandbox_SmokeFlare_EnableZombieSpawn = "Enable Zombie Spawn"
+	Sandbox_SmokeFlare_EnableZombieSpawn_tooltip = "Enable or disable spawning smoke flares in zombies"
 
-	Sandbox_SmokeFlare_SmokeFlareZombieSpawnChance = "Zombie Chance"
-	Sandbox_SmokeFlare_SmokeFlareZombieSpawnChance_tooltip = "Actual chance to spawn a smoke flare on zombies"
+	Sandbox_SmokeFlare_ZombieSpawnChance = "Zombie Chance"
+	Sandbox_SmokeFlare_ZombieSpawnChance_tooltip = "Actual chance to spawn a smoke flare on zombies"
 
-	Sandbox_SmokeFlare_SmokeFlareHorde = "Base Horde Quantity"
-	Sandbox_SmokeFlare_SmokeFlareHorde_tooltip = "This is the base horde for calculating the zombie quantity, this is randomly selected between +50% zombies and -50% zombies"
+	Sandbox_SmokeFlare_TicksToSpawnZombie = "Ticks to Spawn Zombie",
+    Sandbox_SmokeFlare_TicksToSpawnZombie_tooltip = "When the airdrop is called, every this tick will spawn a zombie, airdrop will spawn after the horde finish, if you set the value too low will spawn instantly",
 
-	Sandbox_SmokeFlare_SmokeFlareHordeDistanceSpawn = "Horde Spawn Distance"
-	Sandbox_SmokeFlare_SmokeFlareHordeDistanceSpawn_tooltip = "The distance to the horde to spawn on player position"
+	Sandbox_SmokeFlare_MinimumQuantity = "Minimum Horde Quantity",
+    Sandbox_SmokeFlare_MinimumQuantity_tooltip = "The minimal zombies that will spawn on hordes",
 
-	Sandbox_SmokeFlare_SmokeFlareCommonZombies = "Horde Common Zombies"
-	Sandbox_SmokeFlare_SmokeFlareCommonZombies_tooltip = "Generic zombies that will spawn in the airdrop horde"
+    Sandbox_SmokeFlare_MaximumQuantity = "Maximum Horde Quantity",
+    Sandbox_SmokeFlare_MaximumQuantity_tooltip = "The max zombies that will spawn on hordes",
 
-	Sandbox_SmokeFlare_SmokeFlareRareZombies = "Horde Rare Zombies"
-	Sandbox_SmokeFlare_SmokeFlareRareZombies_tooltip = "Zombies in this options will have 1% chance of spawning in airdrop horde"
+    Sandbox_SmokeFlare_SpawnDistance = "Zombies Spawn Distance",
+    Sandbox_SmokeFlare_SpawnDistance_tooltip = "Zombie distance to the player for the zombie to spawn, 40 is a pretty good distance, bigger than that will try to spawn on unloaded chunks, and zombies may not spawn",
+
+    Sandbox_SmokeFlare_RareZombies = "Rare Zombies List",
+    Sandbox_SmokeFlare_RareZombies_tooltip = "A list of rare zombies that will spawn in the horde",
+
+    Sandbox_SmokeFlare_RareZombiesChance = "Rare Zombies Chance",
+    Sandbox_SmokeFlare_RareZombiesChance_tooltip = "The chance for a rare zombie to spawn in the horde for every zombie spawned, 1000 = 100%, 500 = 50%, 100 = 10%, 10 = 0.1%",
 }

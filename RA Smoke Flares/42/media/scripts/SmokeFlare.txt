@@ -13,7 +13,7 @@ module Base
 		timedAction = CraftWeapon2H,
 		Category = Survival,
 		Tags = InHandCraft,
-		OnCreate = Recipe.OnGiveXP.CallAirdrop,
+		OnCreate = RASmokeFlareRecipe.CallAirdrop,
 		inputs
 		{
 			item 1 [Base.SmokeFlare],

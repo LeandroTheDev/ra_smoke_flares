@@ -1,76 +1,103 @@
 VERSION = 1,
 
-option SmokeFlare.SmokeFlareEnableGunStoreSpawn
+option SmokeFlare.EnableGunStoreSpawn
 {
     type = boolean,
     default = true,
 
     page = SmokeFlare,
-    translation = SmokeFlare_SmokeFlareEnableGunStoreSpawn,
+    translation = SmokeFlare_EnableGunStoreSpawn,
 }
 
-option SmokeFlare.SmokeFlareGunStoreSpawnChance
+option SmokeFlare.GunStoreSpawnChance
 {
 	type = double,
 	min = 0,
 	max = 100,
 	default = 10.0,
 	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareGunStoreSpawnChance,
+	translation = SmokeFlare_GunStoreSpawnChance,
 }
 
-option SmokeFlare.SmokeFlareEnableZombieSpawn
+option SmokeFlare.EnableZombieSpawn
 {
     type = boolean,
     default = true,
 
     page = SmokeFlare,
-    translation = SmokeFlare_SmokeFlareEnableZombieSpawn,
+    translation = SmokeFlare_EnableZombieSpawn,
 }
 
-option SmokeFlare.SmokeFlareZombieSpawnChance
+option SmokeFlare.ZombieSpawnChance
 {
 	type = double,
 	min = 0,
 	max = 100,
-	default = 0.1,
+	default = 10.0,
 	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareZombieSpawnChance,
+	translation = SmokeFlare_ZombieSpawnChance,
 }
 
-option SmokeFlare.SmokeFlareHorde
+option SmokeFlare.TicksToSpawnZombie
 {
 	type = integer,
-	min = 0,
-	max = 9999999,
-	default = 100,
-	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareHorde,
+    min = 0,
+    max = 2147483647,
+    default = 500,
+
+    page = SmokeFlare,
+	translation = SmokeFlare_TicksToSpawnZombie,
 }
 
-option SmokeFlare.SmokeFlareHordeDistanceSpawn
+option SmokeFlare.MinimumQuantity
 {
 	type = integer,
-	min = 0,
-	max = 9999999,
-	default = 50,
-	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareHordeDistanceSpawn,
+    min = 1,
+    max = 2147483647,
+    default = 20,
+
+    page = SmokeFlare,
+	translation = SmokeFlare_MinimumQuantity,
 }
 
-option SmokeFlare.SmokeFlareCommonZombies
+option SmokeFlare.MaximumQuantity
+{
+	type = integer,
+    min = 1,
+    max = 2147483647,
+    default = 50,
+
+    page = SmokeFlare,
+	translation = SmokeFlare_MaximumQuantity,
+}
+
+option SmokeFlare.SpawnDistance
+{
+	type = integer,
+    min = 15,
+    max = 200,
+    default = 40,
+
+    page = SmokeFlare,
+	translation = SmokeFlare_SpawnDistance,
+}
+
+option SmokeFlare.RareZombies
 {
 	type = string,
-	default = AirCrew/AmbulanceDriver/ArmyCamoDesert/ArmyCamoGreen/ArmyServiceUniform/Bandit/BaseballFan_KY/BaseballFan_Rangers/BaseballFan_Z/BaseballPlayer_KY/BaseballPlayer_Rangers/BaseballPlayer_Z/Bathrobe/Bedroom/Biker/Bowling/BoxingBlue/BoxingRed/Camper/Chef/Classy/Cook_Generic/Cook_IceCream/Cook_Spiffos/Cyclist/Doctor/DressLong/DressNormal/DressShort/Farmer/Fireman/FiremanFullSuit/FitnessInstructor/Fossoil/Gas2Go/Generic_Skirt/Generic01/Generic02/Generic03/Generic04/Generic05/GigaMart_Employee/Golfer/HazardSuit/Hobbo/HospitalPatient/Jackie_Jaye/Joan/Jockey04/Jockey05/Kate/Kirsty_Kormick/Mannequin1/Mannequin2/Nurse/OfficeWorkerSkirt/Party/Pharmacist/Police/PoliceState/Postal/PrivateMilitia/Punk/Ranger/Redneck/Rocker/Santa/SantaGreen/ShellSuit_Black/ShellSuit_Blue/ShellSuit_Green/ShellSuit_Pink/ShellSuit_Teal/SkiSpiffo/SportsFan/StreetSports/StripperBlack/StripperPink/Student/Survivalist/Survivalist02/Survivalist03/Swimmer/Teacher/ThunderGas/TinFoilHat/Tourist/Trader/TutorialMom/Varsity/Waiter_Classy/Waiter_Diner/Waiter_Market/Waiter_PileOCrepe/Waiter_PizzaWhirled/Waiter_Restaurant/Waiter_Spiffo/Waiter_TachoDelPancho/WaiterStripper/Young/Bob/ConstructionWorker/Dean/Duke/Fisherman/Frank_Hemingway/Ghillie/Groom/HockeyPsycho/Hunter/Inmate/InmateEscaped/InmateKhaki/Jewelry/Jockey01/Jockey02/Jockey03/Jockey06/John/Judge_Matt_Hass/MallSecurity/Mayor_West_point/McCoys/Mechanic/MetalWorker/OfficeWorker/PokerDealer/PoliceRiot/Priest/PrisonGuard/Rev_Peter_Watts/Raider/Security/Sir_Twiggy/Thug/TutorialDad/Veteran/Waiter_TacoDelPancho/Woodcut,
-	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareCommonZombies,
+    default = FiremanFullSuit/Ghillie/HazardSuit/Hunter/Police/PoliceRiot/PoliceState/Police_SWAT/Survivalist/Survivalist02/Survivalist02_Late/Survivalist02_Mid/Survivalist03/Survivalist03_Late/Survivalist03_Mid/Survivalist04/Survivalist04_Late/Survivalist04_Mid/Survivalist05/Survivalist05_Late/Survivalist05_Mid/Survivalist_Late/Survivalist_Mid,
+	
+    page = SmokeFlare,
+    translation = SmokeFlare_RareZombies,
 }
 
-option SmokeFlare.SmokeFlareRareZombies
+option SmokeFlare.RareZombiesChance
 {
-	type = string,
-	default = KATTAJ1_Army_Black/KATTAJ1_Army_Green/KATTAJ1_Army_Desert/KATTAJ1_Army_White/Stalker/Nomad/OminousNomad/Prepper/Headhunter/DeadlyHeadhunter/Amazona,
-	page = SmokeFlare,
-	translation = SmokeFlare_SmokeFlareRareZombies,
-}
+	type = integer,
+    min = 0,
+    max = 1000,
+    default = 50,
 
+    page = SmokeFlare,
+	translation = SmokeFlare_RareZombiesChance,
+}

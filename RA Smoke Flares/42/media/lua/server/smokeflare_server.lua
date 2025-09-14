@@ -1,39 +1,6 @@
----@diagnostic disable: undefined-global
--- By bobodev the furious has a name 😊😊
-
-local isSingleplayer = (not isClient() and not isServer());
-
--- Called when the player uses a smoke flare
-function Recipe.OnGiveXP.CallAirdrop(craftRecipeData, player)
-    -- Sending the client command to the server
-    sendClientCommand("ServerSmokeFlare", "startsmokeflare", nil);
-end
-
---#region lua utils
-local function stringToList(str)
-    local list = {}
-    for item in string.gmatch(str, "([^/]+)") do
-        table.insert(list, item)
-    end
-    return list
-end
---#endregion
-
--- Performance variavels
-local tickBeforeNextZed = 10; -- Ticks to spawn a zed
-local actualTick = 0;         -- Actual server tick used with tickBeforeNextZed
-
--- This is all the zombies that should spawn when calling the smoke flare
-local zombieOutfitTable = stringToList(SandboxVars.SmokeFlare.SmokeFlareCommonZombies);
-
--- This is the rare zombies
-local zombieRareOutfitTable = stringToList(SandboxVars.SmokeFlare.SmokeFlareRareZombies);
-
 -- All players that called any smoke flare will be stored here
 -- [
 --  "Test": {
---      "zombieCount": 100,
---      "zombieSpawned" 53,
 --      "player": "Test",
 --      "airdropArea": {
 --          x: 100,
@@ -44,194 +11,194 @@ local zombieRareOutfitTable = stringToList(SandboxVars.SmokeFlare.SmokeFlareRare
 -- ]
 local playerSmokeFlares = {};
 
--- Add single zombie randomly on the player
-local function SpawnOneZombie(player)
-    local pLocation = player:getCurrentSquare();
+--#region Horde Spawn
+local tickBeforeNextZed = getSandboxOptions():getOptionByName("SmokeFlare.TicksToSpawnZombie"):getValue(); -- Ticks to spawn a zed
+local actualTick = 0;         -- Actual server tick used with tickBeforeNextZed
+
+-- playerUsername => zombiesRemaining
+local outgoingHordes = {};
+
+-- table list of rare zombies to spawn
+local rareZombiesList = {}
+
+local rareZombiesListStr = getSandboxOptions():getOptionByName("SmokeFlare.RareZombies"):getValue();
+for item in rareZombiesListStr:gmatch("[^/]+") do
+    table.insert(rareZombiesList, item);
+end
+
+local function SpawnZombieToPlayer(player)
+    local square = player:getCurrentSquare();
     local zLocationX = 0;
     local zLocationY = 0;
-    local canSpawn = false;
-    local sandboxDistance = SandboxVars.SmokeFlare.SmokeFlareHordeDistanceSpawn;
+    local canSpawn = true;
+    local distance = getSandboxOptions():getOptionByName("SmokeFlare.SpawnDistance"):getValue();
+
+    -- Pickup spawn position
     for i = 0, 100 do
         if ZombRand(2) == 0 then
-            zLocationX = ZombRand(10) - 10 + sandboxDistance;
-            zLocationY = ZombRand(sandboxDistance * 2) - sandboxDistance;
+            zLocationX = ZombRand(10) - 10 + distance;
+            zLocationY = ZombRand(distance * 2) - distance;
             if ZombRand(2) == 0 then
                 zLocationX = 0 - zLocationX;
             end
         else
-            zLocationY = ZombRand(10) - 10 + sandboxDistance;
-            zLocationX = ZombRand(sandboxDistance * 2) - sandboxDistance;
+            zLocationY = ZombRand(10) - 10 + distance;
+            zLocationX = ZombRand(distance * 2) - distance;
             if ZombRand(2) == 0 then
                 zLocationY = 0 - zLocationY;
             end
         end
-        zLocationX = zLocationX + pLocation:getX();
-        zLocationY = zLocationY + pLocation:getY();
-        local spawnSpace = getWorld():getCell():getGridSquare(zLocationX, zLocationY, 0);
-        if spawnSpace then
-            local isSafehouse = SafeHouse.getSafeHouse(spawnSpace);
-            if spawnSpace:isSafeToSpawn() and spawnSpace:isOutside() and isSafehouse == nil then
-                canSpawn = true;
-                break
-            end
-        else
-            print("[Smoke Flare] Zombie: Space not Loaded " .. player:getUsername());
+        zLocationX = zLocationX + square:getX();
+        zLocationY = zLocationY + square:getY();
+
+        local zombieSquare = getWorld():getCell():getGridSquare(zLocationX, zLocationY, 0);
+        if canSpawn and not zombieSquare then
+            DebugPrintRASmokeFlare(player:getUsername() ..
+                " cannot spawn zombie in X:" .. zLocationX .. " Y: " .. zLocationY .. ", not a valid square");
+            canSpawn = false;
         end
-        if i == 100 then
-            print("[Smoke Flare] Zombie: Can't find a place to spawn " .. player:getUsername());
+
+        if canSpawn and SafeHouse.getSafeHouse(zombieSquare) then
+            DebugPrintRASmokeFlare(player:getUsername() ..
+                " cannot spawn zombie in X:" .. zLocationX .. " Y: " .. zLocationY .. ", is a safehouse");
+            canSpawn = false;
+        end
+
+        if canSpawn and not zombieSquare:isSafeToSpawn() then
+            DebugPrintRASmokeFlare(player:getUsername() ..
+                " cannot spawn zombie in X:" .. zLocationX .. " Y: " .. zLocationY .. ", is not safe to spawn");
+            canSpawn = false;
+        end
+
+        if canSpawn and not zombieSquare:isOutside() then
+            DebugPrintRASmokeFlare(player:getUsername() ..
+                " cannot spawn zombie in X:" .. zLocationX .. " Y: " .. zLocationY .. ", is not outside");
+            canSpawn = false;
+        end
+
+        if canSpawn then
+            break;
         end
     end
-    if canSpawn then
-        -- Rare zombies has 1% chance to spawn
-        local outfit
-        if ZombRand(100) + 1 == 1 then
-            outfit = zombieRareOutfitTable[ZombRand(#zombieRareOutfitTable) + 1];
-        else
-            outfit = zombieOutfitTable[ZombRand(#zombieOutfitTable) + 1];
-        end
-        -- Adding the zombie
-        print("X" .. zLocationX, "  Y" .. zLocationY)
-        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 1.5);
-        -- Adding the zombie to the spawned table list
-        playerSmokeFlares[player:getUsername()]["zombieSpawned"] = playerSmokeFlares[player:getUsername()]
-            ["zombieSpawned"] +
-            1;
-        -- Adding the sound to the player to make the zombies hunt him
-        getWorldSoundManager():addSound(player, player:getCurrentSquare():getX(),
-            player:getCurrentSquare():getY(), player:getCurrentSquare():getZ(), 200, 10);
+
+    outgoingHordes[player:getUsername()] = outgoingHordes[player:getUsername()] - 1;
+
+    if not canSpawn then
+        DebugPrintRASmokeFlare(player:getUsername() .. " ZOMBIE NOT SPAWNED!");
+        return;
     end
+
+    -- Rare Zombie Spawn
+    if ZombRand(0, 1000) + 1 <= getSandboxOptions():getOptionByName("SmokeFlare.RareZombiesChance"):getValue() then
+        DebugPrintRASmokeFlare(player:getUsername() .. " RARE ZOMBIE SPAWNED! X: " .. zLocationX .. " Y: " .. zLocationY);
+
+        local outfit = rareZombiesList[ZombRand(0, #rareZombiesList) + 1];
+
+        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 100, false,
+            0);
+    else -- Normal Zombie SPawn
+        DebugPrintRASmokeFlare(player:getUsername() .. " ZOMBIE SPAWNED! X: " .. zLocationX .. " Y: " .. zLocationY);
+        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, nil, 50, false, false, false, false, false, false, 100, false,
+            0);
+    end
+
+    addSound(player, player:getX(), player:getY(), player:getZ(), 200, 10);
 end
 
--- Start the horde, to the player in parameter
-function StartHorde(specificPlayer)
-    -- Smoke flare zombie count
-    local zombieCount = SandboxVars.SmokeFlare.SmokeFlareHorde * ((ZombRand(150) / 100) + 0.5);
-
-    -- Difficulty calculation
-    local difficulty
-    if SandboxVars.SmokeFlare.SmokeFlareHorde > zombieCount then
-        difficulty = "Easy";
-    else
-        difficulty = "Hard";
-    end
-
+local function SpawnSmokeFlareAidrop(player)
     -- Creates the player table
-    playerSmokeFlares[specificPlayer:getUsername()] = {};
-    playerSmokeFlares[specificPlayer:getUsername()]["zombieCount"] = zombieCount;
-    playerSmokeFlares[specificPlayer:getUsername()]["zombieSpawned"] = 0;
-    playerSmokeFlares[specificPlayer:getUsername()]["player"] = specificPlayer:getUsername();
-    playerSmokeFlares[specificPlayer:getUsername()]["airdropArea"] = {
-        x = specificPlayer:getX(),
-        y = specificPlayer:getY(),
-        z = specificPlayer:getZ()
+    playerSmokeFlares[player:getUsername()] = {};
+    playerSmokeFlares[player:getUsername()]["player"] = player:getUsername();
+    playerSmokeFlares[player:getUsername()]["airdropArea"] = {
+        x = player:getX(),
+        y = player:getY(),
+        z = player:getZ()
     };
 
-    if isSingleplayer then
-        -- Getting the sound file
+    if RASmokeFlareIsSinglePlayer then
+        -- Alert sound
         local alarmSound = "smokeflareradio" .. tostring(ZombRand(1));
-
-        -- Alocating in memory
         local sound = getSoundManager():PlaySound(alarmSound, false, 0);
-        -- Playing the sound to the player
         getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
         sound:setVolume(0.4);
+
+        -- You should awake the player if a horde is coming right?
+        player:forceAwake();
+
+        -- And speed to normal if the player is fast forwarding
+        setGameSpeed(1);
     else
         -- Send any alert to the player
-        sendServerCommand(specificPlayer, "ServerSmokeFlare", "smokeflare", { difficulty = difficulty });
+        sendServerCommand(player, "ServerSmokeFlare", "smokeFlare", nil);
     end
 
-    --Mensagem de log
-    print("[Smoke Flare] Smoke Flare called, spawning on: " ..
-        specificPlayer:getUsername() .. " quantity: " .. zombieCount);
+    playerSmokeFlares[player:getUsername()]["zombieCount"] = ZombRand(
+        getSandboxOptions():getOptionByName("SmokeFlare.MinimumQuantity"):getValue(),
+        getSandboxOptions():getOptionByName("SmokeFlare.MaximumQuantity"):getValue() + 1);
 
-    -- Adicionamos o OnTick para spawnar os zumbis
-    Events.OnTick.Add(CheckHordeRemainingForSmokeFlare);
+    outgoingHordes[player:getUsername()] = playerSmokeFlares[player:getUsername()]["zombieCount"];
+
+    DebugPrintRandomHorde(player:getUsername() ..
+        " airdrop spawned, zombies hunting: " .. outgoingHordes[player:getUsername()]);
 end
 
--- Check if the horde is over
-function CheckHordeRemainingForSmokeFlare()
-    -- Tick update
-    if actualTick <= tickBeforeNextZed then
-        actualTick = actualTick + 1;
-        return
-    end
-    actualTick = 0;
+local function CheckZombiesToSpawn()
+    actualTick = actualTick + 1;
+    if actualTick >= tickBeforeNextZed then
+        actualTick = 0;
 
-    -- Swipe to check if all zombies has spawned for the player
-    local allZombiesSpawned = true;
-    for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
-        if isSingleplayer then -- Singleplayer treatment
-            if playerSpawns.zombieSpawned < playerSpawns.zombieCount then
-                allZombiesSpawned = false;
-                SpawnOneZombie(getPlayer());
+        if RASmokeFlareIsSinglePlayer then
+            local player = getPlayer();
+            if (outgoingHordes[player:getUsername()] or 0) > 0 then
+                SpawnZombieToPlayer(player);
+            elseif outgoingHordes[player:getUsername()] == 0 then
+                outgoingHordes[player:getUsername()] = nil;
+                local airdropArea = playerSmokeFlares[player:getUsername()]["airdropArea"];
+                playerSmokeFlares[player:getUsername()] = nil;
+                SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z });
             end
-        else -- Dedicated Server
-            -- Getting online players
-            local players = getOnlinePlayers();
-
-            local found = false;
-            for i = 0, players:size() - 1 do
-                -- Getting player by index
-                local player = players:get(i);
-                -- Checking if the username is the same
-                if player:getUsername() == playerUsername then
-                    found = true;
-                    -- Checking if the player finished spawning
-                    if playerSpawns.zombieSpawned < playerSpawns.zombieCount then
-                        allZombiesSpawned = false;
-                        SpawnOneZombie(player);
+        else
+            for playerUsername, zombiesRemaining in pairs(outgoingHordes) do
+                local player = getPlayerFromUsername(playerUsername);
+                if player then
+                    if (outgoingHordes[playerUsername] or 0) > 0 then
+                        SpawnZombieToPlayer(player);
+                    elseif outgoingHordes[playerUsername] == 0 then
+                        outgoingHordes[playerUsername] = nil;
+                        local airdropArea = playerSmokeFlares[playerUsername]["airdropArea"];
+                        playerSmokeFlares[playerUsername] = nil;
+                        SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z });
                     end
+                else
+                    outgoingHordes[playerUsername] = nil;
+                    playerSmokeFlares[playerUsername] = nil;
+                    DebugPrintRASmokeFlare("IsoPlayer from " ..
+                        playerUsername .. ", cannot be found, ignoring airdrop spawn...");
                 end
             end
-            -- If not found the player, remove it because hes probably exited from the server
-            if not found then
-                playerSmokeFlares[playerUsername] = nil;
-            end
         end
-    end
-
-    -- Disposing the function if all zombies has spawned
-    if allZombiesSpawned then
-        -- Removing the event
-        Events.OnTick.Remove(CheckHordeRemainingForSmokeFlare);
-        -- Swipe all players to spawn the airdrop and alerts
-        for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
-            local players = getOnlinePlayers();
-            -- Singleplayer treatment
-            if isSingleplayer then
-                -- Getting the sound file
-                local alarmSound = "airdrop" .. tostring(ZombRand(1));
-
-                -- Alocating in memory
-                local sound = getSoundManager():PlaySound(alarmSound, false, 0);
-                -- Playing the sound to the player
-                getSoundManager():PlayAsMusic(alarmSound, sound, false, 0);
-                sound:setVolume(0.1);
-                SpawnSpecificAirdrop(playerSpawns.airdropArea);
-                playerSmokeFlares = {};
-                return;
-            end
-            SpawnSpecificAirdrop(playerSpawns.airdropArea);
-            print("[Smoke Flare] Smoke Flare finished airdrop has been Spawned in X: " ..
-                playerSpawns.airdropArea.x ..
-                " Y: " .. playerSpawns.airdropArea.y .. " Z: " .. playerSpawns.airdropArea.z);
-        end
-        playerSmokeFlares = {};
-        return
     end
 end
 
--- Player message handler
-Events.OnClientCommand.Add(function(module, command, player, args)
-    if module == "ServerSmokeFlare" and command == "startsmokeflare" then
-        -- Checking if the player has already called any airdrop
-        for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
-            if player:getUsername() == playerUsername then
-                print("[Smoke Flare] " .. player:getUsername() .. " trying to use a smoke flare again...");
-                player:getInventory():AddItem('Base.SmokeFlare');
-                return;
-            end
+Events.OnTick.Add(CheckZombiesToSpawn);
+--#endregion
+
+--#region Smoke Flare
+
+RASmokeFlareRecipe = RASmokeFlareRecipe or {};
+RASmokeFlareRecipe.CallAirdrop = function(craftRecipeData, player)
+    DebugPrintRASmokeFlare(player:getUsername() .. " requesting airdrop!");
+
+    -- Checking if the player has already called any airdrop
+    for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
+        if player:getUsername() == playerUsername then
+            DebugPrintRASmokeFlare(player:getUsername() .. " trying to use a smoke flare again...");
+            player:getInventory():AddItem('Base.SmokeFlare');
+            return;
         end
-        StartHorde(player);
     end
-end)
+
+    SpawnSmokeFlareAidrop(player);
+end
+
+--#endregion
