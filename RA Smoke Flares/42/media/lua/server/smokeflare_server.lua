@@ -13,7 +13,7 @@ local playerSmokeFlares = {};
 
 --#region Horde Spawn
 local tickBeforeNextZed = getSandboxOptions():getOptionByName("SmokeFlare.TicksToSpawnZombie"):getValue(); -- Ticks to spawn a zed
-local actualTick = 0;         -- Actual server tick used with tickBeforeNextZed
+local actualTick = 0;                                                                                      -- Actual server tick used with tickBeforeNextZed
 
 -- playerUsername => zombiesRemaining
 local outgoingHordes = {};
@@ -102,6 +102,8 @@ local function SpawnZombieToPlayer(player)
             0);
     end
 
+    DebugPrintRASmokeFlare(player:getUsername() .. " REMAINING: " .. outgoingHordes[player:getUsername()])
+
     addSound(player, player:getX(), player:getY(), player:getZ(), 200, 10);
 end
 
@@ -155,7 +157,8 @@ local function CheckZombiesToSpawn()
                 outgoingHordes[player:getUsername()] = nil;
                 local airdropArea = playerSmokeFlares[player:getUsername()]["airdropArea"];
                 playerSmokeFlares[player:getUsername()] = nil;
-                SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z });
+                SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z }, player:getUsername(),
+                    "Unkown");
             end
         else
             for playerUsername, zombiesRemaining in pairs(outgoingHordes) do
@@ -167,7 +170,8 @@ local function CheckZombiesToSpawn()
                         outgoingHordes[playerUsername] = nil;
                         local airdropArea = playerSmokeFlares[playerUsername]["airdropArea"];
                         playerSmokeFlares[playerUsername] = nil;
-                        SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z });
+                        SpawnSpecificAirdrop({ x = airdropArea.x, y = airdropArea.y, z = airdropArea.z }, playerUsername,
+                            "Unkown");
                     end
                 else
                     outgoingHordes[playerUsername] = nil;
