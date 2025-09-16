@@ -101,3 +101,11 @@ option SmokeFlare.RareZombiesChance
     page = SmokeFlare,
 	translation = SmokeFlare_RareZombiesChance,
 }
+
+option SmokeFlare.ConsoleDebug
+{
+	type = boolean,
+	default = false,
+	page = SmokeFlare,
+	translation = SmokeFlare_ConsoleDebug,
+}

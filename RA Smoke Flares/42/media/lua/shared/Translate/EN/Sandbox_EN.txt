@@ -30,4 +30,7 @@ Sandbox_EN = {
 
     Sandbox_SmokeFlare_RareZombiesChance = "Rare Zombies Chance",
     Sandbox_SmokeFlare_RareZombiesChance_tooltip = "The chance for a rare zombie to spawn in the horde for every zombie spawned, 1000 = 100%, 500 = 50%, 100 = 10%, 10 = 0.1%",
+
+	Sandbox_SmokeFlare_ConsoleDebug = "Debug",
+    Sandbox_SmokeFlare_ConsoleDebug_tooltip = "Debug console",
 }
