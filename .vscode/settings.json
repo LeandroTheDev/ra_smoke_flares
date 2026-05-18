@@ -1,0 +1,19 @@
+{
+    "Lua.diagnostics.globals": [
+        "getSandboxOptions",
+        "ZombRand",
+        "getWorld",
+        "SafeHouse",
+        "addZombiesInOutfit",
+        "addSound",
+        "getSoundManager",
+        "setGameSpeed",
+        "sendServerCommand",
+        "SpawnSpecificAirdrop",
+        "getPlayer",
+        "getPlayerFromUsername",
+        "Events",
+        "instanceItem",
+        "sendAddItemToContainer"
+    ]
+}

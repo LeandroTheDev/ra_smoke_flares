@@ -124,7 +124,8 @@ local function SpawnZombieToPlayer(player)
         DebugPrintRASmokeFlare(player:getUsername() .. " REMAINING: " .. outgoingHordes[player:getUsername()])
     end
 
-    addSound(player, player:getX(), player:getY(), player:getZ(), 200, 10);
+    local airdropArea = playerSmokeFlares[player:getUsername()]["airdropArea"];
+    addSound(player, airdropArea.x, airdropArea.y, airdropArea.z, 200, 10);
 end
 
 local function SpawnSmokeFlareAidrop(player)
@@ -160,7 +161,7 @@ local function SpawnSmokeFlareAidrop(player)
 
     outgoingHordes[player:getUsername()] = playerSmokeFlares[player:getUsername()]["zombieCount"];
 
-    DebugPrintRandomHorde(player:getUsername() ..
+    DebugPrintRASmokeFlare(player:getUsername() ..
         " airdrop spawned, zombies hunting: " .. outgoingHordes[player:getUsername()]);
 end
 
@@ -220,7 +221,11 @@ RASmokeFlareRecipe.CallAirdrop = function(craftRecipeData, player)
     for playerUsername, playerSpawns in pairs(playerSmokeFlares) do
         if player:getUsername() == playerUsername then
             DebugPrintRASmokeFlare(player:getUsername() .. " trying to use a smoke flare again...");
-            player:getInventory():AddItem('Base.SmokeFlare');
+            local item = instanceItem('Base.SmokeFlare')
+            if item then
+                player:getInventory():AddItem(item)
+                sendAddItemToContainer(player:getInventory(), item)
+            end
             return;
         end
     end
