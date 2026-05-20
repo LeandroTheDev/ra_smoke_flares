@@ -1,22 +1,25 @@
 module Base
 {
-	item SmokeFlare {
+	item SmokeFlare
+	{
 		DisplayCategory = Junk,
-		Weight	=	0.1,
-		Type	=	Normal,
-		DisplayName	=	Smoke Flare,
-		Icon	=	SmokeFlare,
+		Weight = 0.1,
+		ItemType = base:normal,
+		DisplayName = Smoke Flare,
+		Icon = SmokeFlare,
 		WorldStaticModel = Money,
 	}
-	craftRecipe UseSmokeFlare {
+
+	craftRecipe UseSmokeFlare
+	{
 		Time = 50,
-		timedAction = CraftWeapon2H,
-		Category = Survival,
+		timedAction = Making,
+		category = Survival,
 		Tags = InHandCraft,
 		OnCreate = RASmokeFlareRecipe.CallAirdrop,
 		inputs
 		{
-			item 1 [Base.SmokeFlare],
+			item 1 [Base.SmokeFlare] flags[Prop1],
 		}
 		outputs
 		{

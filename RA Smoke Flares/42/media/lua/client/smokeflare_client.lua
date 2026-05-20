@@ -66,7 +66,7 @@ local function OnServerCommand(module, command, arguments)
 		sound:setVolume(0.4);
 
 		-- You should awake the player if a horde is coming right?
-		player:forceAwake();
+		getPlayer():forceAwake();
 
 		-- And speed to normal if the player is fast forwarding
 		setGameSpeed(1);
