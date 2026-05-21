@@ -38,6 +38,7 @@ local function SpawnZombieToPlayer(player)
 
     -- Pickup spawn position
     for i = 0, 100 do
+        canSpawn = true;
         if ZombRand(2) == 0 then
             zLocationX = ZombRand(10) - 10 + distance;
             zLocationY = ZombRand(distance * 2) - distance;
@@ -110,13 +111,13 @@ local function SpawnZombieToPlayer(player)
 
         local outfit = rareZombiesList[ZombRand(0, #rareZombiesList) + 1];
 
-        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 100, false,
+        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, outfit, 50, false, false, false, false, false, false, 1.0, false,
             0);
     else -- Normal Zombie SPawn
         if debug then
             DebugPrintRASmokeFlare(player:getUsername() .. " ZOMBIE SPAWNED! X: " .. zLocationX .. " Y: " .. zLocationY);
         end
-        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, nil, 50, false, false, false, false, false, false, 100, false,
+        addZombiesInOutfit(zLocationX, zLocationY, 0, 1, nil, 50, false, false, false, false, false, false, 1.0, false,
             0);
     end
 
@@ -183,7 +184,15 @@ local function CheckZombiesToSpawn()
             end
         else
             for playerUsername, zombiesRemaining in pairs(outgoingHordes) do
-                local player = getPlayerFromUsername(playerUsername);
+                local player = nil;
+                local onlinePlayers = getOnlinePlayers();
+                for i = 0, onlinePlayers:size() - 1 do
+                    local playerIteration = onlinePlayers:get(i);
+                    if playerIteration:getUsername() == playerUsername then
+                        player = playerIteration;
+                        break;
+                    end
+                end
                 if player then
                     if (outgoingHordes[playerUsername] or 0) > 0 then
                         SpawnZombieToPlayer(player);

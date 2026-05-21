@@ -43,7 +43,7 @@ option SmokeFlare.TicksToSpawnZombie
 	type = integer,
     min = 0,
     max = 2147483647,
-    default = 500,
+    default = 10,
 
     page = SmokeFlare,
 	translation = SmokeFlare_TicksToSpawnZombie,
